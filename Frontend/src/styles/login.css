@@ -1,0 +1,59 @@
+.login-container {
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
+    url('../../public/images/registration-bg.jpeg');
+    background-position: cover;
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.form-box {
+    width: 25%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.form-box input {
+    width: 100%;
+    padding: 10px 15px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    color: #333;
+    transition: border-color 0.2s ease-in-out;
+}
+
+.form-box input:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.form-box button {
+    width: 100%;
+    padding: 10px 15px;
+    background-color: #9339d8;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.form-text {
+    color: #fff;
+    font-size: medium;
+    margin: 10px;
+}
+
+.form-text a {
+    font-size: large;
+    color: #00d76c;
+}

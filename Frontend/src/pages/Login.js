@@ -1,7 +1,7 @@
 // src/pages/Login.js
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios"; // Для работы с API запросами
+import axios from "axios";
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -20,23 +20,19 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post("/api/auth/login", formData); // Отправка данных на сервер
-      // Если вход успешный, сохраняем токен и редиректим пользователя
+      const response = await axios.post("/api/auth/login", formData);
       localStorage.setItem("token", response.data.token);
-      navigate("/dashboard"); // Перенаправление на страницу с прогрессом (или dashboard)
+      navigate("/dashboard");
     } catch (err) {
       setError("Неверные email или пароль.");
     }
   };
 
   return (
-    <div>
-      <h2>Вход</h2>
+    <div className="login-container">
       {error && <p style={{ color: "red" }}>{error}</p>}{" "}
-      {/* Если ошибка, выводим сообщение */}
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="form-box">
         <div>
-          <label htmlFor="email">Email:</label>
           <input
             type="email"
             id="email"
@@ -48,7 +44,6 @@ const Login = () => {
           />
         </div>
         <div>
-          <label htmlFor="password">Пароль:</label>
           <input
             type="password"
             id="password"
@@ -61,7 +56,7 @@ const Login = () => {
         </div>
         <button type="submit">Войти</button>
       </form>
-      <p>
+      <p className="form-text">
         Ещё не зарегистрированы? <a href="/register">Зарегистрироваться</a>
       </p>{" "}
       {/* Ссылка на регистрацию */}
