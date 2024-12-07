@@ -1,57 +1,53 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 const Profile = () => {
-  const [userData, setUserData] = useState(null);
-  const [error, setError] = useState("");
-  const navigate = useNavigate();
+  const [profile, setProfile] = useState(null);
 
   useEffect(() => {
-    const fetchUserData = async () => {
+    const fetchProfile = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/api/profile");
-        setUserData(response.data);
-      } catch (err) {
-        setError("Ошибка загрузки данных");
-        console.error(err);
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+          throw new Error("Token is missing");
+        }
+
+        const response = await fetch("http://localhost:8080/api/profile", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        console.log("Profile Response Status:", response.status);
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`Profile fetch failed: ${errorText}`);
+        }
+
+        const data = await response.json();
+        console.log("Profile data:", data);
+        setProfile(data);
+      } catch (error) {
+        console.error("Error fetching profile:", error.message);
+        console.log("Ошибка загрузки профиля");
       }
     };
-    fetchUserData();
+
+    fetchProfile();
   }, []);
 
-  if (error) {
-    return <div>{error}</div>;
-  }
-
-  if (!userData) {
-    return <div>Загрузка...</div>;
-  }
+  if (!profile) return <div>Loading...</div>;
 
   return (
     <div className="profile-container">
-      <h1>Профиль пользователя</h1>
-      <p>Имя: {userData.username}</p>
-      <p>Email: {userData.email}</p>
-      <p>Уровень: {userData.level}</p>
-      <p>Опыт: {userData.experience}</p>
-      <p>
-        Дата регистрации: {new Date(userData.createdAt).toLocaleDateString()}
-      </p>
-
-      {/* Форма для редактирования никнейма */}
-      <form>
-        <label htmlFor="username">Изменить никнейм:</label>
-        <input
-          type="text"
-          id="username"
-          value={userData.username}
-          onChange={(e) =>
-            setUserData({ ...userData, username: e.target.value })
-          }
-        />
-        <button type="submit">Сохранить</button>
-      </form>
+      <h1>Welcome, {profile.username}</h1>
+      <p>Email: {profile.email}</p>
+      <h2>Progress</h2>
+      <p>Level: {profile.progress.level}</p>
+      <p>Experience: {profile.progress.experience}</p>
     </div>
   );
 };

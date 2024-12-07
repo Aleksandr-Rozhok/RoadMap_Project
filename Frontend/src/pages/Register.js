@@ -25,8 +25,17 @@ const Register = () => {
     e.preventDefault();
 
     try {
-      await axios.post("http://localhost:8080/api/register", formData);
-      navigate("http://localhost:8080/api/profile");
+      const response = await axios.post(
+        "http://localhost:8080/api/register",
+        formData
+      );
+
+      if (response.data.token) {
+        localStorage.setItem("token", response.data.token);
+        navigate("/profile");
+      } else {
+        throw new Error("Token not provided");
+      }
     } catch (err) {
       setError("Ошибка регистрации, попробуйте снова.");
     }

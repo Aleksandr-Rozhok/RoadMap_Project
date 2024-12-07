@@ -1,12 +1,13 @@
 // src/pages/Login.js
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+
+import "../styles/login.css";
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
-  const navigate = useNavigate(); // Хук для навигации
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -16,22 +17,46 @@ const Login = () => {
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post("/api/auth/login", formData);
-      localStorage.setItem("token", response.data.token);
-      navigate("/dashboard");
+      const response = await fetch("http://localhost:8080/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
+
+      const text = await response.text();
+      console.log("Response text:", text);
+
+      console.log("Response status:", response.status);
+      if (!response.ok) {
+        throw new Error(`Login failed: ${response.status}`);
+      }
+
+      const data = text ? JSON.parse(text) : {};
+      console.log("Login successful:", data);
+
+      localStorage.setItem("token", data.token);
+      console.log("Saved token:", localStorage.getItem("token"));
+
+      navigate("/profile");
     } catch (err) {
-      setError("Неверные email или пароль.");
+      console.error("Ошибка авторизации:", err.message);
+      setError("Ошибка авторизации, попробуйте снова.");
     }
   };
 
   return (
     <div className="login-container">
       {error && <p style={{ color: "red" }}>{error}</p>}{" "}
-      <form onSubmit={handleSubmit} className="form-box">
+      <form onSubmit={handleLogin} className="form-box">
         <div>
           <input
             type="email"
