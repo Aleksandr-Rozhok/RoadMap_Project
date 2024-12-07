@@ -16,10 +16,12 @@ func main() {
 
 	router.RegisterRoutes(r, db)
 
-	headersOk := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type"})
-	methodsOk := handlers.AllowedMethods([]string{"POST", "GET", "OPTIONS"})
-	originsOk := handlers.AllowedOrigins([]string{"*"})
+	corsHandler := handlers.CORS(
+		handlers.AllowedOrigins([]string{"http://localhost:3000"}),
+		handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE"}),
+		handlers.AllowedHeaders([]string{"Content-Type", "Authorization"}),
+	)
 
 	fmt.Println("Server is running on http://localhost:8080")
-	log.Fatal(http.ListenAndServe(":8080", handlers.CORS(headersOk, methodsOk, originsOk)(r)))
+	log.Fatal(http.ListenAndServe(":8080", corsHandler(r)))
 }

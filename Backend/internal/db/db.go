@@ -10,6 +10,12 @@ import (
 )
 
 func InitDB() *gorm.DB {
+	db := connectDB()
+	migrateDB(db)
+	return db
+}
+
+func connectDB() *gorm.DB {
 	if err := godotenv.Load(); err != nil {
 		log.Fatal("Error loading .env file")
 	}
@@ -26,9 +32,13 @@ func InitDB() *gorm.DB {
 		log.Fatal("Failed to connect to database:", err)
 	}
 
-	if err := db.AutoMigrate(&models.User{}); err != nil {
+	log.Println("Database connection established")
+	return db
+}
+
+func migrateDB(db *gorm.DB) {
+	if err := db.AutoMigrate(&models.User{}, &models.Progress{}); err != nil {
 		log.Fatal("Failed to migrate database:", err)
 	}
-
-	return db
+	log.Println("Database migrated successfully")
 }
