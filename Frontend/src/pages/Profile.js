@@ -1,4 +1,10 @@
 import { useEffect, useState } from "react";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+import CharacterCard from "../components/CharacterCard";
+import ProfileInfo from "../components/ProfileInfo";
+
+import "../styles/profile.css";
 
 const Profile = () => {
   const [profile, setProfile] = useState(null);
@@ -43,11 +49,12 @@ const Profile = () => {
 
   return (
     <div className="profile-container">
-      <h1>Welcome, {profile.username}</h1>
-      <p>Email: {profile.email}</p>
-      <h2>Progress</h2>
-      <p>Level: {profile.progress.level}</p>
-      <p>Experience: {profile.progress.experience}</p>
+      <Header />
+      <div className="content-container">
+        <CharacterCard image="/images/character.jpeg" />
+        <ProfileInfo profile={profile} />
+      </div>
+      <Footer />
     </div>
   );
 };
